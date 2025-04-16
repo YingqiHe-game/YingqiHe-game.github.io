@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <title>Yingqi He's HomePage</title>
+    <style>
+        /* 通用样式 */
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        h1,
+        h2,
+        h3 {
+            line-height: 1.2;
+        }
+
+        /* 导航栏样式 */
+        nav {
+            transition: background-color 0.3s ease;
+        }
+
+        nav:hover {
+            background-color: #5a88e6;
+        }
+
+        /* 轮播图样式 */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slider img {
+            min-width: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .slider img:hover {
+            transform: scale(1.05);
+        }
+
+        .prev,
+        .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .prev:hover,
+        .next:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* 调整图片大小 */
+        @media (min-width: 768px) {
+           .game-item .slider-container {
+                width: 25%;
+            }
+        }
+            /* 个人头像样式 */
+        #about .about-item img.avatar {
+            width: 150px;
+            height: 150px;
+            min-width: 150px; /* 防止压缩 */
+            object-fit: cover; /* 保持比例 */
+            border: 3px solid #fff; /* 添加边框 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+        }
+
+        /* 学校LOGO样式 */
+        #about .about-item img.school-logo {
+            width: 100px;
+            height: 100px;
+            padding: 10px; /* 添加内边距 */
+            background-color: #fff; /* 白色背景 */
+            border: 2px solid #5a88e6; /* 品牌色边框 */
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            #about .about-item img.avatar {
+                width: 120px;
+                height: 120px;
+            }
+            #about .about-item img.school-logo {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        /* 关于我板块样式 */
+        #about .about-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #about .about-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        #about .about-item img {
+            margin-bottom: 10px;
+        }
+
+        #about .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* 作品展示板块样式 */
+        .game-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .game-details {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* 修改后的图片放大模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            animation: zoom 0.3s;
+        }
+
+        .close {
+            position: fixed;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+        }
+
+        @keyframes zoom {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <!-- 导航栏 -->
+    <nav class="bg-blue-600 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-white text-2xl font-bold">Yingqi He</h1>
+            <ul class="flex space-x-4">
+                <li><a href="#about" class="text-white hover:text-gray-300">About</a></li>
+                <li><a href="#portfolio" class="text-white hover:text-gray-300">Portfolio</a></li>
+                <li><a href="#contact" class="text-white hover:text-gray-300">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 首页 -->
+    <header class="bg-blue-600 text-white py-20 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold mb-4">Hi! This is Yingqi He's Page！</h2>
+            <p class="text-lg">Spread the joy of games!</p>
+        </div>
+    </header>
+
+    <!-- 关于我 -->
+    <section id="about" class="container mx-auto py-16">
+        <h2 class="text-3xl font-bold text-center mb-8">ABOUT</h2>
+        <div class="flex-container">
+            <div class="about-item md:w-1/3">
+                <img src="https://picsum.photos/200/200" alt="个人照片" class="rounded-full avatar">
+                <h3 class="text-xl font-bold mb-2">INTRODUCTION</h3>
+                <p>I am He Yingqi, a senior student majoring in Digital Media Technology at Hangzhou Dianzi University. I have a strong interest in the game development. I have participated in Game Jam several times with my classmates, acting as a programmer and game designer in the team. I have strong teamwork skills and often take charge of task assignment and communication in the team. I mainly use Unity for development in competitions and have a solid foundation in C - language coding. I have developed several independent game demos. I enjoy taking on various challenges in games and experiencing the complete game content as much as possible. My favorite game genre is ARPG games like the Dark Souls series. I like to study their game design and combat mechanisms and have tried making ARPG game demos myself. I hope to engage in the game - related industry in the future.</p>
+            </div>
+            <div class="about-item md:w-1/3">
+                <img src="images/hdu.jpg" alt="学校 logo" class="rounded-full school-logo">
+                <h3 class="text-xl font-bold mb-2">EDUCATION BACKGROUND</h3>
+                <p>Hangzhou Dianzi University</p>
+                <p>2021.9-2025.6</p>
+                <ul>
+                    <li>Relevant Courses: 
+                      Fundamentals of Digital Media Technology & Computer Graphics & Human-Computer Interaction & Interaction Design & Mobile Application Development & Multimedia Technology</li>
+                    <li>Selected Honors: 
+                      Third-class Scholarship, Hangzhou Dianzi University — November 2023
+	Third-class Scholarship, Hangzhou Dianzi University — May 2024
+	Second-class Scholarship, Hangzhou Dianzi University — October 2024
+</li>
+                </ul>
+            </div>
+            <div class="about-item md:w-1/3">
+                <h3 class="text-xl font-bold mb-2">WORK EXPERIENCE</h3>
+                <ul>
+                    <li>Hangzhou Tianji Information Technology Co., Ltd.                              05/2024-07/2024
+Client Engineer Intern                                                    Hangzhou, China
+
+                        <ul>
+                            <li>	Maintained and optimized the game client system using Cocos Studio, ensuring seamless performance and user experience across various platforms.</li>
+                            <li>	Collaborated with a team of developers to write and optimize Lua code, enhancing functionality and resolving technical issues to improve gameplay mechanics.</li>
+                            <li>	Conducted thorough testing and debugging of game features, identifying and addressing potential vulnerabilities and performance bottlenecks.</li>
+                            <li>	Gained insights into the software development lifecycle and agile methodologies, contributing to team meetings and project planning sessions.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品展示 -->
+    <section id="portfolio" class="bg-white py-16">
+        <h2 class="text-3xl font-bold text-center mb-8">PortFolio</h2>
+        <div class="container mx-auto">
+            <!-- 游戏 1 -->
+            <div class="game-item" onclick="toggleDetails(0)">
+                <div class="flex flex-col md:flex-row">
+                    <div class="slider-container mb-4 md:mb-0 md:mr-4">
+                        <div class="slider">
+                            <img src="images//slimegame1.png" alt="游戏 1 截图 1" onclick="openModal(event, this.src)">
+                            <img src="images//slimegame2.png" alt="游戏 1 截图 2" onclick="openModal(event, this.src)">
+                            <img src="images//slimegame3.png" alt="游戏 1 截图 3" onclick="openModal(event, this.src)">
+                        </div>
+                        <span class="prev" onclick="plusSlides(-1, 0)">&#10094;</span>
+                        <span class="next" onclick="plusSlides(1, 0)">&#10095;</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2">Slime Wants to Exp+3!</h3>
+                        <p class="mb-2">This is a pixel - style casual game for two players. Inspired by the game "Gold Miner", it adds some new mechanisms, such as skills, interruptions, resource snatching, and vertical movement, turning it into a rather competitive game. Two slimes can either collect or snatch each other's water droplets, and they can also cut each other's tentacles to hinder the opponent. It's a casual two - player game that combines both cooperation and competition, which can enhance the friendship between players.</p>
+                        <p class="text-gray-600">Programmer, Game Designer</p>
+            <p class="text-gray-600">October 2023</p>
+            <p class="text-gray-600">Completed G-Bits 48H University Game Jam Challenge</p>
+            <p class="text-gray-600">2D Pixel - style Two - player Puzzle Strategy Game</p>
+            <p class="text-gray-600">Technologies used: C#, Unity</p>
+            <p class="text-gray-600">Project Management: Managed the project</p>
+            <p class="text-gray-600">Game Design: Designed game gameplay, combat system.</p>
+            <p class="text-gray-600">Programming: Implemented resource collection and snatching function.</p>
+                    </div>
+                </div>
+                <div class="game-details" id="game-details-0">
+                    <p>Game Background: 
+There is a slime named Blue. Before coming to this cave, it was too weak and could only crawl furtively. But one day, Blue found that there was magical water in this strange cave. After absorbing the water here, its EXP started to grow crazily! At this time, another slime named Green came to drink the water from the same source. After they both finished absorbing the water in the puddle, they looked up and found that magical water droplets were falling from the top of the cave! In order to become the level - 100 slime king as soon as possible, they will use their excellent crawling skills and very useful tentacles to absorb all the water here.</p>
+                  <p>Core gameplay:
+Both players (slimes) need to use their tentacles to suck up water droplets. It takes time to suck up items, and the heavier the water droplet is, the longer it takes to suck it up. Once a water droplet is sucked onto the slime, it can devour the droplet and start digesting and absorbing it. The more water there is to be digested, the higher the absorption efficiency will be. By absorbing the magic in the water, the slimes can gain experience points. When they have gained enough experience points, they can improve their abilities and choose one of the following three options: the maximum number of tentacles, the tentacle dragging force, or a random special skill.
+During the sucking process, if a tentacle is attacked by the opponent's tentacle, the player's tentacle will be broken, and they will be stunned, unable to move or launch tentacles for a certain period of time. At the same time, the attacked tentacle will spit out some of the incompletely absorbed water, which will be added to the dragged water droplet. After the stun ends, the broken tentacle will be repaired and can be used again.</p>
+                </div>
+            </div>
+            <!-- 游戏 2 -->
+            <div class="game-item" onclick="toggleDetails(1)">
+                <div class="flex flex-col md:flex-row">
+                    <div class="slider-container mb-4 md:mb-0 md:mr-4">
+                        <div class="slider">
+                            <img src="images//spaceshipgame1.png" alt="游戏 2 截图 1" onclick="openModal(event, this.src)">
+                            <img src="images//spaceshipgame2.png" alt="游戏 2 截图 2" onclick="openModal(event, this.src)">
+                            <img src="images//spaceshipgame3.png" alt="游戏 2 截图 3" onclick="openModal(event, this.src)">
+                        </div>
+                        <span class="prev" onclick="plusSlides(-1, 1)">&#10094;</span>
+                        <span class="next" onclick="plusSlides(1, 1)">&#10095;</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2">Wild Silence</h3>
+                        <p class="mb-2">This is a 2D simulation business game & 2.5D Role - playing game. The main storyline revolves around a lone starship struggling to survive in the vast expanse of the starry sea. As the captain of the starship, players need to rationally allocate the resources at hand and dispatch their crew members to nearby planets at the right time to collect the resources they need.</p>
+                        <p class="text-gray-600">Programmer, Game Designer</p>
+            <p class="text-gray-600">March 2023 - May 2023</p>
+            <p class="text-gray-600">Participated in Gibit Future Game Creator Competition (Won the second prize)</p>
+            <p class="text-gray-600">2D Simulation Business Game & 2.5D Role - playing Game</p>
+            <p class="text-gray-600">Technologies used: C#, Unity</p>
+            <p class="text-gray-600">Programming: Implemented map random generation, backpack system, and exploration system.</p>
+            <p class="text-gray-600">Game Design: Numerically designed the exploration part.</p>
+                    </div>
+                </div>
+                <div class="game-details" id="game-details-1">
+                    <p>Game background:
+A fully - loaded colonial ship was attacked by an unknown force during its journey. Although it managed to avoid sinking under the command of its captain, a lot of resources were lost and consumed due to the fierce battle. Moreover, the number and whereabouts of the enemies, as well as when they will launch the next attack, are all unknown. Therefore, in order to complete the journey, the captain has to collect resources on various planets along the way to keep the starship running. The captain must constantly be on guard against the enemies that may appear from time to time and engage in battles with them when necessary. Anyway, the captain's ultimate goal is to leave this dead - like star region and safely lead the entire ship to the final destination.</p>
+                </div>
+            </div>
+          <!-- 游戏 3 -->
+            <div class="game-item" onclick="toggleDetails(2)">
+                <div class="flex flex-col md:flex-row">
+                    <div class="slider-container mb-4 md:mb-0 md:mr-4">
+                        <div class="slider">
+                            <img src="images/chesscardgame1.png" alt="游戏 3 截图 1" onclick="openModal(event, this.src)">
+                            <img src="images/chesscardgame2.png" alt="游戏 3 截图 2" onclick="openModal(event, this.src)">
+                            <img src="images/chesscardgame3.png" alt="游戏 3 截图 3" onclick="openModal(event, this.src)">
+                        </div>
+                        <span class="prev" onclick="plusSlides(-1, 2)">&#10094;</span>
+                        <span class="next" onclick="plusSlides(1, 2)">&#10095;</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2">Air Command</h3>
+                        <p class="mb-2">This is a game that combines the gameplay of Flight Chess and card - based battles. Players have four cards in hand, each with different functions and points. During their turn, players can choose to use the function of a hand - held card or use the points on the card to move their fighter jets. </p>
+                        <p class="text-gray-600">Programmer, Game Designer</p>
+            <p class="text-gray-600">March 2023 - April 2023</p>
+            <p class="text-gray-600">Technologies used: C++, SFML</p>
+            <p class="text-gray-600">Game Design: Designed and implemented a board game combining Flight Chess and cards</p>
+            <p class="text-gray-600">Programming: Implemented Flight Chess functions and various card - based combat functions.</p>
+                    </div>
+                </div>
+                <div class="game-details" id="game-details-2">
+                    <p>When a fighter jet reaches a designated position, the player can increase their reputation points. When a player's fighter jet meets an opponent's fighter jet, a battle begins. The battle is divided into an offensive side and a defensive side. Within a specified time, players choose one of their hand - held cards as the battle points and another as a tactical function to engage in combat with the opponent. The winner will plunder some of the loser's reputation points. After reaching the maximum number of rounds, the player with more reputation points wins.</p>
+                </div>
+            </div>
+            <!-- 游戏 4 -->
+            <div class="game-item" onclick="toggleDetails(3)">
+                <div class="flex flex-col md:flex-row">
+                    <div class="slider-container mb-4 md:mb-0 md:mr-4">
+                        <div class="slider">
+                            <img src="images/soulgame1.gif" alt="游戏 4 截图 1" onclick="openModal(event, this.src)">
+                            <img src="images/soulgame2.gif" alt="游戏 4 截图 2" onclick="openModal(event, this.src)">
+                            <img src="images/soulgame3.gif" alt="游戏 4 截图 3" onclick="openModal(event, this.src)">
+                        </div>
+                        <span class="prev" onclick="plusSlides(-1, 3)">&#10094;</span>
+                        <span class="next" onclick="plusSlides(1, 3)">&#10095;</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2">Little Knight</h3>
+                        <p class="mb-2">This is a highly modular 3D Soulslike ARPG game demo developed based on the Unity engine. Its architecture design revolves around multiple core modules such as character management, input processing, weapon management, state management, animation control, camera control, and game management. These modules collaborate with each other to jointly build a complete ARPG game system.</p>
+                        <p class="text-gray-600">Programmer, Game Designer</p>
+            <p class="text-gray-600">November 2023 - January 2024</p>
+            <p class="text-gray-600">Technologies used: C#, Unity</p>
+            <p class="text-gray-600">Game Design: Designed the combat system</p>
+            <p class="text-gray-600">Programming: Controlled character actions, implemented the combat system, Timeline performances, weapon system, and animation control system.</p>
+                    </div>
+                </div>
+                <div class="game-details" id="game-details-3">
+                    <p>In a linear area, players are guided by mobs and UI elements to learn basic operations. After that, they enter the boss area for a novice boss battle. Since this is a demo, all types of equipment need to be displayed within the game.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section id="contact" class="bg-white py-16">
+        <h2 class="text-3xl font-bold text-center mb-8">Contact</h2>
+        <div class="container mx-auto text-center">
+            <p>You can contact me in the following ways:</p>
+            <p>E-mail：in7.he@outlook.com</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                
+                <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-blue-600 text-white text-center py-4">
+        <p>&copy; 2025 Powered by Yingqi He</p>
+    </footer>
+
+    <!-- 修改后的图片放大模态框 -->
+    <div id="myModal" class="modal" onclick="closeModal()">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+    <script>
+        // 轮播图逻辑
+        let slideIndex = [1, 1, 1,1];
+        showSlides(1, 0);
+        showSlides(1, 1);
+        showSlides(1, 2);
+        showSlides(1, 3);
+        function plusSlides(n, no) {
+            event.stopPropagation(); // 阻止事件冒泡
+            showSlides(slideIndex[no] += n, no);
+        }
+
+        function showSlides(n, no) {
+            let x = document.querySelectorAll(".game-item")[no].querySelectorAll(".slider img");
+            if (n > x.length) slideIndex[no] = 1;
+            if (n < 1) slideIndex[no] = x.length;
+            x.forEach(img => img.style.display = "none");
+            x[slideIndex[no] - 1].style.display = "block";
+        }
+
+        // 平滑滚动效果
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                window.scrollTo({
+                    top: target.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 切换游戏详细介绍
+        function toggleDetails(index) {
+            const details = document.getElementById(`game-details-${index}`);
+            details.style.display = details.style.display === "block" ? "none" : "block";
+        }
+
+        // 图片模态框控制
+        function openModal(event, imgSrc) {
+            event.stopPropagation();
+            const modal = document.getElementById("myModal");
+            const modalImg = document.getElementById("img01");
+            modal.style.display = "flex";
+            modalImg.src = imgSrc;
+        }
+
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+        // 点击模态框背景关闭
+        document.getElementById('myModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>
